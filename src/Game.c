@@ -1,0 +1,203 @@
+#ifdef _TINSPIRE
+#include <os.h>
+#include <libndls.h>
+#endif
+#include "Game.h"
+#include "Replacements.h"
+#include "YouWinGraphic.h"
+
+void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
+{
+   *ppGame = malloc(sizeof(struct Game));
+   struct Game* pGame = *ppGame;
+   TwoDigitsLibCreate(&(pGame->m_TwoDigits), pstrLevelData);
+   pGame->m_nLevelNum = nLevelNum;
+   pGame->m_pConfig = pConfig;
+   pGame->m_bWon = IsTwoDigitsGameOver(pGame->m_TwoDigits);
+
+#ifdef _TINSPIRE
+   pGame->m_pYouWinGraphic = nSDL_LoadImage(image_YouWin);
+   SDL_SetColorKey(pGame->m_pYouWinGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(pGame->m_pYouWinGraphic->format, 255, 255, 255));
+#else
+   pGame->m_pYouWinGraphic = NULL;
+#endif
+
+   pGame->m_pScreen = pScreen;
+   CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig, 1);
+   pGame->m_pMetrics = NULL;
+   CreateMetrics(&pGame->m_pMetrics, pGame->m_TwoDigits, pGame->m_pConfig);
+
+   pGame->m_pSelectionInformation = NULL;
+   CreateSelectionInformation(&pGame->m_pSelectionInformation, pGame->m_TwoDigits);
+
+   int nWidth = GetTwoDigitsWidth(pGame->m_TwoDigits);
+   int nHeight = GetTwoDigitsHeight(pGame->m_TwoDigits);
+   int nNumPtrs = nWidth * nHeight;
+   pGame->m_apPieces = malloc(nNumPtrs*sizeof(struct Piece));
+   for(int x=0; x<nWidth; x++) {
+      for(int y=0; y<nHeight; y++) {
+         struct Piece* pPiece = &pGame->m_apPieces[x+y*nWidth];
+         CreatePiece(pPiece, x, y, pGame->m_TwoDigits, pGame->m_pMetrics, pGame->m_pSelectionInformation, pConfig);
+      }
+   }
+
+   pGame->m_bShouldQuit = 0;
+}
+
+void FreeGame(struct Game** ppGame)
+{
+   struct Game* pGame = *ppGame;
+
+   int nWidth = GetTwoDigitsWidth(pGame->m_TwoDigits);
+   int nHeight = GetTwoDigitsHeight(pGame->m_TwoDigits);
+   for(int x=0; x<nWidth; x++) {
+      for(int y=0; y<nHeight; y++) {
+         struct Piece* pPiece = &pGame->m_apPieces[x+y*nWidth];
+         FreePiece(pPiece);
+      }
+   }
+   free(pGame->m_apPieces);
+
+   if(pGame->m_pYouWinGraphic != NULL )
+      SDL_FreeSurface(pGame->m_pYouWinGraphic);
+
+   FreeSelectionInformation(&pGame->m_pSelectionInformation);
+   FreeBackground(&pGame->m_pBackground);
+   FreeMetrics(&pGame->m_pMetrics);
+
+   pGame->m_pConfig = NULL;//Does not own
+   pGame->m_pScreen = NULL;//Does not own
+
+   free(pGame);
+   *ppGame = NULL;
+}
+
+void DrawBoard(struct Game* pGame)
+{
+   SDL_FillRect(pGame->m_pScreen, NULL, SDL_MapRGB(pGame->m_pScreen->format, 255, 255, 255));
+
+   DrawBackground(pGame->m_pBackground);
+   
+   int nWidth = GetTwoDigitsWidth(pGame->m_TwoDigits);
+   int nHeight = GetTwoDigitsHeight(pGame->m_TwoDigits);
+
+   //Draw pieces
+   for(int x=0; x<nWidth; x++) {
+      for(int y=0; y<nHeight; y++) {
+         struct Piece* pPiece = &pGame->m_apPieces[x+y*nWidth];
+         PieceDraw(pPiece, pGame->m_pScreen);
+      }
+   }
+
+   //Draw selector
+
+   if( pGame->m_bWon == 1 && pGame->m_pYouWinGraphic != NULL ) {
+      SDL_Rect rectYouWin;
+      rectYouWin.x = (SCREEN_WIDTH - pGame->m_pYouWinGraphic->w)/2;
+      rectYouWin.y = (SCREEN_HEIGHT - pGame->m_pYouWinGraphic->h)/2;
+      rectYouWin.w = pGame->m_pYouWinGraphic->w;
+      rectYouWin.h = pGame->m_pYouWinGraphic->h;
+      SDL_BlitSurface(pGame->m_pYouWinGraphic, NULL, pGame->m_pScreen, &rectYouWin);
+   }
+   
+   SDL_UpdateRect(pGame->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+void UpdateGameWon(struct Game* pGame)
+{
+   if( pGame->m_bWon && pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 250 ) {
+#ifdef _TINSPIRE
+      SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, 1);
+#endif
+   }
+}
+
+void Undo(struct Game* pGame)
+{
+   if( pGame->m_bWon )
+      return;
+
+   TwoDigitsUndo(pGame->m_TwoDigits);
+}
+
+void Redo(struct Game* pGame)
+{
+   if( pGame->m_bWon )
+      return;
+
+   TwoDigitsRedo(pGame->m_TwoDigits);
+}
+
+int GamePollEvents(struct Game* pGame)
+{
+   SDL_Event event;
+   while( SDL_PollEvent( &event ) ) {
+      switch( event.type ) {
+         case SDL_KEYDOWN:
+            switch( event.key.keysym.sym) {
+              case SDLK_ESCAPE:
+                  return 0;
+                  break;
+
+               case SDLK_UP:
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelectionInformation, Up);
+		  }
+                  break;
+
+	       case SDLK_DOWN:
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelectionInformation, Down);
+		  }
+                  break;
+
+               case SDLK_LEFT:
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelectionInformation, Left);
+		  }
+                  break;
+
+               case SDLK_RIGHT:
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelectionInformation, Right);
+		  }
+		  break;
+		case SDLK_PLUS:
+		  Redo(pGame);
+		  break;
+		case SDLK_MINUS:
+		  Undo(pGame);
+                  break;
+               case SDLK_RETURN:
+                  ToggleTwoDigitsSpot(pGame->m_TwoDigits, GetCurrentX(pGame->m_pSelectionInformation), GetCurrentY(pGame->m_pSelectionInformation));
+                  pGame->m_bWon = IsTwoDigitsGameOver(pGame->m_TwoDigits);
+                  UpdateGameWon(pGame);
+                  break;
+
+               default:
+                  break;
+            }
+          default:
+             break;
+      }
+   }
+   return 1;
+}
+
+int GameLoop(struct Game* pGame)
+{
+   if( GamePollEvents(pGame) == 0 )
+      return 0;
+
+   DrawBoard(pGame);
+
+   SDL_Delay(30);
+
+   return 1;
+}
+
+int GameShouldQuit(struct Game* pGame)
+{
+   return pGame->m_bShouldQuit;
+}
+
