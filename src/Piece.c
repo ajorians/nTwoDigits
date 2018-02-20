@@ -7,7 +7,6 @@
 #define PIECE_BORDER_SIZE	(4)
 
 static Font* g_pFont = NULL;
-static Font* g_pFontError = NULL;
 
 void CreatePiece(struct Piece* pPiece, int x, int y, TwoDigitsLib twodigits, struct Metrics* pMetrics, struct SelectionInformation* pSelectionInformation, struct Config* pConfig)
 {
@@ -19,11 +18,7 @@ void CreatePiece(struct Piece* pPiece, int x, int y, TwoDigitsLib twodigits, str
    pPiece->m_pSelectionInformation = pSelectionInformation;
 
    if( g_pFont == NULL ) {
-      g_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/, 36);
-   }
-
-   if (g_pFontError == NULL) {
-      g_pFontError = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 36);
+      g_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/, 24);
    }
 }
 
@@ -37,11 +32,6 @@ void FreePiece(struct Piece* pPiece)
    if( g_pFont != NULL ) {
       FreeFont(g_pFont);
       g_pFont = NULL;
-   }
-
-   if (g_pFontError != NULL) {
-      FreeFont(g_pFontError);
-      g_pFontError = NULL;
    }
 }
 

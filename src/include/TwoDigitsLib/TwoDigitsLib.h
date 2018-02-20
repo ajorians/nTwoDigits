@@ -48,4 +48,6 @@ int GetTwoDigitMarking(TwoDigitsLib api, int x, int y, enum TwoDigitMarking* pMa
 int GetTwoDigitsLeftMarkedTotal(TwoDigitsLib api);
 int GetTwoDigitsRightMarkedTotal(TwoDigitsLib api);
 
+int DoSolveTwoDigits(TwoDigitsLib api);
+
 #endif

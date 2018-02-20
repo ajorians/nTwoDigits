@@ -6,11 +6,10 @@
 //Values
 
 #define LEVEL_1 "TwoDigits 1 \
-4 4 \
-31 9 33 7 \
-1 2 3 4 \
-5 6 7 8 \
-9 10 11 12"
+3 3 \
+26 14 23 \
+9 19 11 \
+1 22 30"
 
 void LevelLoad(char* pstr, int nLevelNum);
 

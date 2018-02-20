@@ -4,8 +4,8 @@
 #ifndef _TINSPIRE
 //#define SCREEN_WIDTH	(320)
 //#define SCREEN_HEIGHT	(240)
-#define SCREEN_WIDTH	(1920)
-#define SCREEN_HEIGHT	(1080)
+#define SCREEN_WIDTH	(1280)
+#define SCREEN_HEIGHT	(768)
 #endif
 
 void IntToA(char* pstrBuffer, int bufferSize, int n);

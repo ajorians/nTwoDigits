@@ -24,6 +24,10 @@ int GetPieceWidth(struct Metrics* pMetrics, int x, int y);
 int GetPieceHeight(struct Metrics* pMetrics, int x, int y);
 int GetPieceValueTextLeft(struct Metrics* pMetrics, int x, int y);
 int GetPieceValueTextTop(struct Metrics* pMetrics, int x, int y);
+int GetTallyBoxTop(struct Metrics* pMetrics);
+int GetTallyBoxWidth(struct Metrics* pMetrics);
+int GetTallyBoxHeight(struct Metrics* pMetrics);
+int GetRightTallyBoxLeft(struct Metrics* pMetrics);
 
 #endif
 

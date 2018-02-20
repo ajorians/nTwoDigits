@@ -14,6 +14,7 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    pGame->m_nLevelNum = nLevelNum;
    pGame->m_pConfig = pConfig;
    pGame->m_bWon = IsTwoDigitsGameOver(pGame->m_TwoDigits);
+   pGame->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/, 24);
 
 #ifdef _TINSPIRE
    pGame->m_pYouWinGraphic = nSDL_LoadImage(image_YouWin);
@@ -65,6 +66,9 @@ void FreeGame(struct Game** ppGame)
    FreeBackground(&pGame->m_pBackground);
    FreeMetrics(&pGame->m_pMetrics);
 
+   FreeFont(pGame->m_pFont);
+   pGame->m_pFont = NULL;
+
    pGame->m_pConfig = NULL;//Does not own
    pGame->m_pScreen = NULL;//Does not own
 
@@ -89,7 +93,21 @@ void DrawBoard(struct Game* pGame)
       }
    }
 
-   //Draw selector
+   char buffer[8];
+
+   SDL_Rect rectTallyBox;
+   rectTallyBox.x = 0;
+   rectTallyBox.y = GetTallyBoxTop(pGame->m_pMetrics);
+   rectTallyBox.w = GetTallyBoxWidth(pGame->m_pMetrics);
+   rectTallyBox.h = GetTallyBoxHeight(pGame->m_pMetrics);
+   SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
+   IntToA(buffer, sizeof(buffer), GetTwoDigitsLeftMarkedTotal(pGame->m_TwoDigits));
+   DrawText(pGame->m_pScreen, pGame->m_pFont, rectTallyBox.x + rectTallyBox.w/2, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
+
+   rectTallyBox.x = GetRightTallyBoxLeft(pGame->m_pMetrics);
+   SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
+   IntToA(buffer, sizeof(buffer), GetTwoDigitsRightMarkedTotal(pGame->m_TwoDigits));
+   DrawText(pGame->m_pScreen, pGame->m_pFont, rectTallyBox.x + rectTallyBox.w/2, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
 
    if( pGame->m_bWon == 1 && pGame->m_pYouWinGraphic != NULL ) {
       SDL_Rect rectYouWin;
@@ -172,6 +190,10 @@ int GamePollEvents(struct Game* pGame)
                   ToggleTwoDigitsSpot(pGame->m_TwoDigits, GetCurrentX(pGame->m_pSelectionInformation), GetCurrentY(pGame->m_pSelectionInformation));
                   pGame->m_bWon = IsTwoDigitsGameOver(pGame->m_TwoDigits);
                   UpdateGameWon(pGame);
+                  break;
+
+               case SDLK_a:
+                  DoSolveTwoDigits(pGame->m_TwoDigits);
                   break;
 
                default:

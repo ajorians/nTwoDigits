@@ -8,6 +8,7 @@
 #include "Metrics.h"
 #include "Piece.h"
 #include "SelectionInformation.h"
+#include "Font.h"
 
 struct Game
 {
@@ -22,6 +23,7 @@ struct Game
    struct SDL_Surface* m_pYouWinGraphic;
    struct SDL_Surface* m_pScreen;//Does not own
    struct Background* m_pBackground;
+   Font* m_pFont;
 };
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen);

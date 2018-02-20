@@ -464,46 +464,139 @@ int GetTwoDigitMarking(TwoDigitsLib api, int x, int y, enum TwoDigitMarking* pMa
    return TWODIGITSLIB_OK;
 }
 
-int GetTwoDigitsLeftMarkedTotal(TwoDigitsLib api)
+int GetTotal(struct TwoDigitsBoard* pBoard, enum TwoDigitMarking eMarking)
 {
-   struct TwoDigits* pT;
-   int nTotal;
-   DEBUG_FUNC_NAME;
+   int nTotal = 0;
 
-   pT = (struct TwoDigits*)api;
-   nTotal = 0;
-
-   for(int x=0; x<GetTwoDigitsWidth(api); x++)
+   for(int x=0; x<pBoard->m_nWidth; x++)
    {
-      for(int y=0; y<GetTwoDigitsHeight(api); y++)
+      for(int y=0; y<pBoard->m_nHeight; y++)
       {
-         if( GetAt(pT->m_pBoard, x, y)->m_eMarking == LeftMarked )
-            nTotal += GetTwoDigitsSpotValue(api, x, y);
+         if( GetAt(pBoard, x, y)->m_eMarking == eMarking )
+            nTotal += GetAt(pBoard, x, y)->m_nValue;
       }
    }
 
    return nTotal;
 }
 
-int GetTwoDigitsRightMarkedTotal(TwoDigitsLib api)
+int GetTwoDigitsLeftMarkedTotal(TwoDigitsLib api)
 {
    struct TwoDigits* pT;
-   int nTotal;
    DEBUG_FUNC_NAME;
 
    pT = (struct TwoDigits*)api;
-   nTotal = 0;
+   GetTotal(pT->m_pBoard, LeftMarked);
+}
 
-   for(int x=0; x<GetTwoDigitsWidth(api); x++)
-   {
-      for(int y=0; y<GetTwoDigitsHeight(api); y++)
-      {
-         if( GetAt(pT->m_pBoard, x, y)->m_eMarking == RightMarked )
-            nTotal += GetTwoDigitsSpotValue(api, x, y);
+int GetTwoDigitsRightMarkedTotal(TwoDigitsLib api)
+{
+   struct TwoDigits* pT;
+   DEBUG_FUNC_NAME;
+
+   pT = (struct TwoDigits*)api;
+   return GetTotal(pT->m_pBoard, RightMarked);
+}
+
+int SolveGame(struct TwoDigitsBoard* pBoardOriginal, struct TwoDigitsBoard* pBoard, int nLeftDepth, int nRightDepth)
+{
+   //Make a copy of the board
+   struct TwoDigitsBoard* pBoardCopy = malloc(sizeof(struct TwoDigitsBoard));
+   pBoardCopy->m_nWidth = pBoard->m_nWidth;
+   pBoardCopy->m_nHeight = pBoard->m_nHeight;
+   pBoardCopy->m_pItems = malloc(sizeof(struct Cell)*pBoardCopy->m_nWidth * pBoardCopy->m_nHeight);
+
+   for(int x=0; x<pBoardCopy->m_nWidth; x++) {
+      for (int y = 0; y < pBoardCopy->m_nHeight; y++) {
+         GetAt(pBoardCopy, x, y)->m_nValue = GetAt(pBoard, x, y)->m_nValue;
+         GetAt(pBoardCopy, x, y)->m_eMarking = GetAt(pBoard, x, y)->m_eMarking;
       }
    }
 
-   return nTotal;
+   if( nLeftDepth > 0 ) {
+      for(int x=0; x<pBoardCopy->m_nWidth; x++)
+      {
+         for( int y=0; y<pBoardCopy->m_nHeight; y++)
+         {
+            enum TwoDigitMarking eMarking = GetAt(pBoardCopy, x, y)->m_eMarking;
+            if( eMarking != NotMarked )
+               continue;
+
+            GetAt(pBoardCopy, x, y)->m_eMarking = LeftMarked;
+            if( 1 == SolveGame(pBoardOriginal, pBoardCopy, nLeftDepth-1, nRightDepth) )
+            {
+               free(pBoardCopy);
+               return 1;
+            }
+            GetAt(pBoardCopy, x, y)->m_eMarking = NotMarked;
+         }
+      }
+   }
+
+   else if( nRightDepth > 0 ) {
+      for(int x=0; x<pBoardCopy->m_nWidth; x++)
+      {
+         for( int y=0; y<pBoardCopy->m_nHeight; y++)
+         {
+            enum TwoDigitMarking eMarking = GetAt(pBoardCopy, x, y)->m_eMarking;
+            if( eMarking != NotMarked )
+               continue;
+
+            GetAt(pBoardCopy, x, y)->m_eMarking = RightMarked;
+            if( 1 == SolveGame(pBoardOriginal, pBoardCopy, nLeftDepth, nRightDepth-1) )
+            {
+               free(pBoardCopy);
+               return 1;
+            }
+            GetAt(pBoardCopy, x, y)->m_eMarking = NotMarked;
+         }
+      }
+   }
+   else
+   {
+      //Evaluate if won the level or not
+      int nLeftMarked = GetTotal(pBoardCopy, LeftMarked), nRightMarked = GetTotal(pBoardCopy, RightMarked);
+      if( nLeftMarked != 0 && nRightMarked != 0 && nLeftMarked == nRightMarked )
+      {
+         for(int x=0; x<pBoardCopy->m_nWidth; x++) {
+            for (int y = 0; y < pBoardCopy->m_nHeight; y++) {
+               GetAt(pBoardOriginal, x, y)->m_nValue = GetAt(pBoardCopy, x, y)->m_nValue;
+               GetAt(pBoardOriginal, x, y)->m_eMarking = GetAt(pBoardCopy, x, y)->m_eMarking;
+            }
+         }
+         free(pBoardCopy);
+         return 1;
+      }
+   }
+
+   free(pBoardCopy);
+
+   return 0;
+}
+
+int DoSolveTwoDigits(TwoDigitsLib api)
+{
+   struct TwoDigits* pT;
+   int nLeftDepth, nRightDepth, nTotalDepth;
+   DEBUG_FUNC_NAME;
+
+   pT = (struct TwoDigits*)api;
+   for(nTotalDepth = 2; nTotalDepth < GetTwoDigitsWidth(api)*GetTwoDigitsHeight(api); nTotalDepth++)
+   {
+      for( nLeftDepth = 1; nLeftDepth < nTotalDepth-1; nLeftDepth++)
+      {
+         for( nRightDepth = 1; nRightDepth < nTotalDepth - nLeftDepth; nRightDepth++)
+         {
+            if( 1 == SolveGame(pT->m_pBoard, pT->m_pBoard, nLeftDepth, nRightDepth) )
+            {
+               printf("Solveable :)");
+               return 1;
+            }
+         }
+      }
+   }
+
+   return TWODIGITSLIB_OK;
 }
 
 
