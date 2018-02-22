@@ -137,7 +137,6 @@
   <ItemGroup>
     <ClCompile Include="Background.c" />
     <ClCompile Include="Config.c" />
-    <ClCompile Include="EquationHinter.c" />
     <ClCompile Include="Font.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="Help.c" />
@@ -148,25 +147,24 @@
     <ClCompile Include="Options.c" />
     <ClCompile Include="Piece.c" />
     <ClCompile Include="Replacements.c" />
-    <ClCompile Include="Selector.c" />
+    <ClCompile Include="SelectionInformation.c" />
     <ClCompile Include="StarDrawer.c" />
     <ClCompile Include="Startup.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="EquationHinter.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameBackgroundWide.h" />
     <ClInclude Include="Help.h" />
     <ClInclude Include="Levels.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MenuGraphic.h" />
     <ClInclude Include="Metrics.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Replacements.h" />
-    <ClInclude Include="Selector.h" />
+    <ClInclude Include="SelectionInformation.h" />
     <ClInclude Include="StarDrawer.h" />
     <ClInclude Include="StarGraphic.h" />
     <ClInclude Include="Startup.h" />

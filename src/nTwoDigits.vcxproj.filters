@@ -39,9 +39,6 @@
     <ClCompile Include="Piece.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Selector.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Startup.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,7 +57,7 @@
     <ClCompile Include="StarDrawer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EquationHinter.c">
+    <ClCompile Include="SelectionInformation.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,9 +71,6 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameBackgroundWide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Levels.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,9 +81,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Piece.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Selector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Startup.h">
@@ -116,7 +107,10 @@
     <ClInclude Include="YouWinGraphic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EquationHinter.h">
+    <ClInclude Include="MenuGraphic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionInformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
