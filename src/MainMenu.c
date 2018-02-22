@@ -26,7 +26,7 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
 
    UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
 
-   pMenu->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
+   pMenu->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 24);
 
    CreateStarDrawer( &pMenu->m_pStarDrawer );
 
@@ -144,13 +144,8 @@ void UpdateDimensionAndOperations(struct MainMenu* pMenu, int nLevelNum)
 
 void UpdateDisplay(struct MainMenu* pMenu)
 {
-#if 0
-   SDL_Rect DestRect;
-   DestRect.x = 0;
-   DestRect.y = 0;
-   DestRect.w = SCREEN_WIDTH;
-   DestRect.h = SCREEN_HEIGHT;
-   SDL_FillRect(pMenu->m_pScreen, &DestRect, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+#ifndef _TINSPIRE
+   SDL_FillRect(pMenu->m_pScreen, NULL, SDL_MapRGB(pMenu->m_pScreen->format, 0, 0, 0));
 #endif
 
 #ifdef _TINSPIRE
@@ -173,14 +168,14 @@ void UpdateDisplay(struct MainMenu* pMenu)
    IntToA(levelNumBuffer, 4, pMenu->m_nCurrentLevel);
 
    char buffer[16];
-   StringCopy(buffer, 16, "");
-   //StringCopy(buffer, 16, "Level #");
+   //StringCopy(buffer, 16, "");
+   StringCopy(buffer, 16, "Level #");
    StringAppend(buffer, 16, levelNumBuffer);
 
    int x = SCREEN_WIDTH/2+15;
    int y = SCREEN_HEIGHT/2 - 34;
 
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 0, 0, 0);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 255, 255, 255);
 
    if( GetBeatLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel-1/*ToBase 0*/) == 1 )
       DrawStar(pMenu->m_pStarDrawer, pMenu->m_pScreen, x+22, y-5);
@@ -212,8 +207,8 @@ void UpdateDisplay(struct MainMenu* pMenu)
    y += 14;
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 0, 0, 0);*/
 
-   //DrawText(pMenu->m_pScreen, pMenu->m_pFont, 20, SCREEN_HEIGHT - 27, "Options", 0, 0, 0);
-   //DrawText(pMenu->m_pScreen, pMenu->m_pFont, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 27, "Help", 0, 0, 0);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, 20, SCREEN_HEIGHT - 27, "Options", 0, 0, 0);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 27, "Help", 0, 0, 0);
 
    int r = 255, g = 0, b = 0, a = 200;
 

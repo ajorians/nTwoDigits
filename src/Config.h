@@ -1,13 +1,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#ifdef _TINSPIRE
+#ifndef _WIN32
 #include "ArchiveLib/ArchiveLib.h"
 #endif
 
 struct Config
 {
-#ifdef _TINSPIRE
+#ifndef _WIN32
    ArchiveLib m_Archive;
 #endif
    int m_nBeatLevels[250];

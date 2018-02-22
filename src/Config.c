@@ -3,6 +3,7 @@
 #else
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #endif
 #include "Config.h"
 
@@ -17,11 +18,11 @@ void CreateConfig(struct Config** ppConfig)
    pConfig->m_nDrawBackground = 1;
    pConfig->m_nLastLevel = 0;
 
-#ifdef _TINSPIRE
+#ifndef _WIN32
    pConfig->m_Archive = NULL;
    ArchiveCreate(&pConfig->m_Archive);
 
-   OpenArchiveFile(pConfig->m_Archive, "KenKenSettings.tns");
+   OpenArchiveFile(pConfig->m_Archive, "TwoDigitsSettings.tns");
    int nSettings = GetNumberArchives(pConfig->m_Archive, "Settings");
    char strName[MAX_NAME_LENGTH];
    for(int i=0; i<nSettings; i++) {
@@ -40,12 +41,7 @@ void CreateConfig(struct Config** ppConfig)
 
       strcpy(buffer, "DrawBkg");
       if( strcmp(strName, buffer) == 0 ) {
-         pConfig->m_nDrawBackground = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
-      }
-
-      strcpy(buffer, "EquationHint");
-      if( strcmp(strName, buffer) == 0 ) {
-         pConfig->m_nEquationHint = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
+         pConfig->m_nDrawBackground = atoi(GetValue(pConfig->m_Archive, "Settings", i));
       }
 
       strcpy(buffer, "LastLevel");
@@ -61,7 +57,7 @@ void FreeConfig(struct Config** ppConfig)
    char buffer[16];
    char bufferName[16];
    struct Config* pConfig = *ppConfig;
-#ifdef _TINSPIRE
+#ifndef _WIN32
    ArchiveSetBatchMode(pConfig->m_Archive, ARCHIVE_ENABLE_BATCH);
    for(int nLevel=0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++) {
       sprintf(buffer, "%d", pConfig->m_nBeatLevels[nLevel]);
@@ -71,10 +67,6 @@ void FreeConfig(struct Config** ppConfig)
 
    sprintf(buffer, "%d", pConfig->m_nDrawBackground);
    strcpy(bufferName, "DrawBkg");
-   UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
-
-   sprintf(buffer, "%d", pConfig->m_nEquationHint);
-   strcpy(bufferName, "EquationHint");
    UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
 
    sprintf(buffer, "%d", pConfig->m_nLastLevel);
