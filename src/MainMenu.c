@@ -22,7 +22,7 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_pScreen = pScreen;
 
    pMenu->m_eChoice = Play;
-   pMenu->m_nCurrentLevel = nLevelNum >= 1 ? nLevelNum : 1;
+   pMenu->m_nCurrentLevel = 40;// nLevelNum >= 1 ? nLevelNum : 1;
 
    UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
 
@@ -180,7 +180,7 @@ void UpdateDisplay(struct MainMenu* pMenu)
    if( GetBeatLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel-1/*ToBase 0*/) == 1 )
       DrawStar(pMenu->m_pStarDrawer, pMenu->m_pScreen, x+22, y-5);
 
-   IntToA(levelNumBuffer, 4, pMenu->m_nDimension);
+   /*IntToA(levelNumBuffer, 4, pMenu->m_nDimension);
    StringCopy(buffer, 16, "");
    StringAppend(buffer, 16, levelNumBuffer);
    StringAppend(buffer, 16, " x ");
@@ -189,7 +189,7 @@ void UpdateDisplay(struct MainMenu* pMenu)
    y += 16;
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 0, 0, 0);
 
-   /*StringCopy(buffer, 16, "");
+   StringCopy(buffer, 16, "");
    if( (pMenu->m_eOperations & AddOperation) == AddOperation) {
       StringAppend(buffer, 16, "+ ");
    }

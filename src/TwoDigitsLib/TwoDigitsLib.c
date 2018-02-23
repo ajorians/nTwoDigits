@@ -60,6 +60,9 @@ struct TwoDigits
    struct TwoDigitAction* m_pRedoActions;
 };
 
+void ClearUndos(TwoDigitsLib api);
+void ClearRedos(TwoDigitsLib api);
+
 void Cleanup(struct TwoDigits** ppT)
 {
    if( *ppT != NULL ) {
@@ -486,7 +489,7 @@ int GetTwoDigitsLeftMarkedTotal(TwoDigitsLib api)
    DEBUG_FUNC_NAME;
 
    pT = (struct TwoDigits*)api;
-   GetTotal(pT->m_pBoard, LeftMarked);
+   return GetTotal(pT->m_pBoard, LeftMarked);
 }
 
 int GetTwoDigitsRightMarkedTotal(TwoDigitsLib api)

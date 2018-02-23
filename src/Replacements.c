@@ -5,6 +5,7 @@
 #include <os.h>
 #else
 #include <stdio.h>
+#include <stdarg.h>
 #endif
 
 void IntToA(char* pstrBuffer, int bufferSize, int n)
@@ -38,5 +39,13 @@ void StringAppend(char* pstrBuffer, int nSize, char* pstrAddition)
 #else
    strcat(pstrBuffer, pstrAddition);
 #endif
+}
+
+void StringFmt(char* pstrBuffer, int nSize, char* pstrFormat, ...)
+{
+   va_list args = NULL;
+   va_start(args, pstrFormat);
+   vsprintf_s(pstrBuffer, nSize, pstrFormat, args);
+   va_end(args);
 }
 

@@ -7,6 +7,7 @@ Font* LoadFont(char* pstrName, int nID, int r, int g, int b, int size)
    return nSDL_LoadFont(nID, r, g, b);
 #else
    Font* pFont = TTF_OpenFont(pstrName, size);
+#ifndef _WIN32
    if( pFont == NULL )
    {
       char buffer[256];
@@ -20,6 +21,7 @@ Font* LoadFont(char* pstrName, int nID, int r, int g, int b, int size)
          pFont = TTF_OpenFont(buffer, size);
       }
    }
+#endif
    return pFont;
 #endif
 }
