@@ -6,6 +6,7 @@
 #include <string.h>
 #endif
 #include "Config.h"
+#include "Replacements.h"
 
 void CreateConfig(struct Config** ppConfig)
 {
@@ -26,12 +27,12 @@ void CreateConfig(struct Config** ppConfig)
    int nSettings = GetNumberArchives(pConfig->m_Archive, "Settings");
    char strName[MAX_NAME_LENGTH];
    for(int i=0; i<nSettings; i++) {
-      strcpy(strName, GetName(pConfig->m_Archive, "Settings", i));
+      StringCopy(strName, MAX_NAME_LENGTH, GetName(pConfig->m_Archive, "Settings", i));
 
       char buffer[16];
 
       for(int nLevel = 0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++) {
-         sprintf(buffer, "Level%d", nLevel);
+         StringFmt(buffer, sizeof(buffer), "Level%d", nLevel);
 
          if( strcmp(strName, buffer) == 0 ) {
             pConfig->m_nBeatLevels[nLevel] = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
@@ -39,12 +40,12 @@ void CreateConfig(struct Config** ppConfig)
          }
       }
 
-      strcpy(buffer, "DrawBkg");
+      StringCopy(buffer, sizeof(buffer), "DrawBkg");
       if( strcmp(strName, buffer) == 0 ) {
          pConfig->m_nDrawBackground = atoi(GetValue(pConfig->m_Archive, "Settings", i));
       }
 
-      strcpy(buffer, "LastLevel");
+      StringCopy(buffer, sizeof(buffer), "LastLevel");
       if( strcmp(strName, buffer) == 0 ) {
          pConfig->m_nLastLevel = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
       }

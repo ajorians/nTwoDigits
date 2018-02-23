@@ -22,7 +22,7 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_pScreen = pScreen;
 
    pMenu->m_eChoice = Play;
-   pMenu->m_nCurrentLevel = nLevelNum >= 1 ? nLevelNum : 1;
+   pMenu->m_nCurrentLevel = 40;// nLevelNum >= 1 ? nLevelNum : 1;
 
    UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
 
