@@ -22,7 +22,8 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_pScreen = pScreen;
 
    pMenu->m_eChoice = Play;
-   pMenu->m_nCurrentLevel = 40;// nLevelNum >= 1 ? nLevelNum : 1;
+   (nLevelNum);
+   pMenu->m_nCurrentLevel = 100;// nLevelNum >= 1 ? nLevelNum : 1;
 
    UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
 
@@ -131,6 +132,8 @@ int PollEvents(struct MainMenu* pMenu)
 
 void UpdateDimensionAndOperations(struct MainMenu* pMenu, int nLevelNum)
 {
+   (pMenu);
+   (nLevelNum);
    /*char strLevelData[2048];
    LevelLoad(strLevelData, nLevelNum);
    KenKenLib kenken;
@@ -233,13 +236,13 @@ void UpdateDisplay(struct MainMenu* pMenu)
    }
 
    //Top
-   thickLineRGBA(pMenu->m_pScreen, left, top, right, top, MENU_SELECTOR_LINE_WIDTH, r, g, b, a);
+   thickLineRGBA(pMenu->m_pScreen, (Sint16)left, (Sint16)top, (Sint16)right, (Sint16)top, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
    //Left
-   thickLineRGBA(pMenu->m_pScreen, left, top, left, bottom, MENU_SELECTOR_LINE_WIDTH, r, g, b, a);
+   thickLineRGBA(pMenu->m_pScreen, (Sint16)left, (Sint16)top, (Sint16)left, (Sint16)bottom, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
    //Bottom
-   thickLineRGBA(pMenu->m_pScreen, left, bottom, right, bottom, MENU_SELECTOR_LINE_WIDTH, r, g, b, a);
+   thickLineRGBA(pMenu->m_pScreen, (Sint16)left, (Sint16)bottom, (Sint16)right, (Sint16)bottom, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
    //Right
-   thickLineRGBA(pMenu->m_pScreen, right, top, right, bottom, MENU_SELECTOR_LINE_WIDTH, r, g, b, a);
+   thickLineRGBA(pMenu->m_pScreen, (Sint16)right, (Sint16)top, (Sint16)right, (Sint16)bottom, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
 
    SDL_UpdateRect(pMenu->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
