@@ -605,6 +605,216 @@
 91 79 15 \
 63 35 3"
 
+#define LEVEL_101 "TwoDigits 1 \
+3 3 \
+97 27 45 \
+81 49 1 \
+29 75 19"
+
+#define LEVEL_102 "TwoDigits 1 \
+3 3 \
+35 63 25 \
+71 81 51 \
+97 99 57"
+
+#define LEVEL_103 "TwoDigits 1 \
+3 3 \
+45 83 19 \
+67 21 1 \
+23 25 59"
+
+#define LEVEL_104 "TwoDigits 1 \
+3 3 \
+23 5 1 \
+51 79 89 \
+17 97 95"
+
+#define LEVEL_105 "TwoDigits 1 \
+3 3 \
+59 3 29 \
+13 61 71 \
+73 47 55"
+
+#define LEVEL_106 "TwoDigits 1 \
+3 3 \
+93 31 11 \
+23 73 81 \
+75 71 51"
+
+#define LEVEL_107 "TwoDigits 1 \
+3 3 \
+29 35 45 \
+39 47 25 \
+9 83 99"
+
+#define LEVEL_108 "TwoDigits 1 \
+3 3 \
+77 81 11 \
+99 83 61 \
+49 19 95"
+
+#define LEVEL_109 "TwoDigits 1 \
+3 3 \
+25 7 57 \
+59 85 87 \
+23 79 47"
+
+#define LEVEL_110 "TwoDigits 1 \
+3 3 \
+3 85 17 \
+49 73 51 \
+15 65 87"
+
+#define LEVEL_111 "TwoDigits 1 \
+3 3 \
+65 27 41 \
+79 15 89 \
+71 21 55"
+
+#define LEVEL_112 "TwoDigits 1 \
+3 3 \
+29 95 41 \
+77 25 53 \
+15 11 67"
+
+#define LEVEL_113 "TwoDigits 1 \
+3 3 \
+43 87 75 \
+37 89 7 \
+55 51 19"
+
+#define LEVEL_114 "TwoDigits 1 \
+3 3 \
+95 77 65 \
+85 3 31 \
+99 75 51"
+
+#define LEVEL_115 "TwoDigits 1 \
+3 3 \
+11 19 73 \
+65 17 61 \
+97 67 51"
+
+#define LEVEL_116 "TwoDigits 1 \
+3 3 \
+19 3 63 \
+41 67 85 \
+17 11 61"
+
+#define LEVEL_117 "TwoDigits 1 \
+3 3 \
+21 59 13 \
+95 35 63 \
+37 23 39"
+
+#define LEVEL_118 "TwoDigits 1 \
+3 3 \
+1 29 61 \
+35 41 9 \
+77 27 7"
+
+#define LEVEL_119 "TwoDigits 1 \
+3 3 \
+37 31 3 \
+13 45 49 \
+43 39 75"
+
+#define LEVEL_120 "TwoDigits 1 \
+3 3 \
+25 17 65 \
+85 23 21 \
+97 71 31"
+
+#define LEVEL_121 "TwoDigits 1 \
+3 3 \
+59 63 39 \
+67 21 71 \
+9 43 13"
+
+#define LEVEL_122 "TwoDigits 1 \
+3 3 \
+49 63 3 \
+73 51 59 \
+37 31 5"
+
+#define LEVEL_123 "TwoDigits 1 \
+3 3 \
+13 65 41 \
+5 19 83 \
+67 75 39"
+
+#define LEVEL_124 "TwoDigits 1 \
+3 3 \
+7 55 73 \
+11 81 43 \
+91 79 53"
+
+#define LEVEL_125 "TwoDigits 1 \
+3 3 \
+81 3 59 \
+65 93 35 \
+7 51 71"
+
+#define LEVEL_126 "TwoDigits 1 \
+3 3 \
+95 53 15 \
+43 35 17 \
+25 31 87"
+
+#define LEVEL_127 "TwoDigits 1 \
+3 3 \
+53 69 87 \
+55 71 79 \
+5 75 91"
+
+#define LEVEL_128 "TwoDigits 1 \
+3 3 \
+27 41 45 \
+15 19 79 \
+25 99 71"
+
+#define LEVEL_129 "TwoDigits 1 \
+3 3 \
+85 53 25 \
+31 7 65 \
+95 71 15"
+
+#define LEVEL_130 "TwoDigits 1 \
+3 3 \
+43 87 37 \
+13 77 55 \
+3 39 15"
+
+#define LEVEL_131 "TwoDigits 1 \
+3 3 \
+51 75 91 \
+93 77 23 \
+33 57 21"
+
+#define LEVEL_132 "TwoDigits 1 \
+3 3 \
+55 23 27 \
+57 39 65 \
+91 79 45"
+
+#define LEVEL_133 "TwoDigits 1 \
+3 3 \
+19 49 65 \
+23 99 71 \
+87 3 27"
+
+#define LEVEL_134 "TwoDigits 1 \
+3 3 \
+87 3 59 \
+23 85 79 \
+93 19 47"
+
+#define LEVEL_135 "TwoDigits 1 \
+3 3 \
+95 5 85 \
+37 57 33 \
+23 3 51"
+
 void LevelLoad(char* pstr, int nLevelNum);
 
 #endif
