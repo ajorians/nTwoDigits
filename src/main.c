@@ -137,14 +137,34 @@ int main(int argc, char *argv[])
       else {
          struct Game* pGame = NULL;
          int bShouldQuit = 0;
-         CreateGame(&pGame, strLevelData, nLevelNumber, pConfig, pScreen);
-         while(GameLoop(pGame)){}
-         bShouldQuit = GameShouldQuit(pGame);
-         FreeGame(&pGame);
 
-         if( bShouldQuit )
+         while (1) {
+
+            CreateGame(&pGame, strLevelData, nLevelNumber, pConfig, pScreen);
+            int nLoop;
+            while (1) {
+               nLoop = GameLoop(pGame);
+               if (nLoop != GAME_LOOPING)
+                  break;
+            }
+            bShouldQuit = GameShouldQuit(pGame);
+            FreeGame(&pGame);
+
+            if (nLoop == GAME_QUIT)
+               break;
+            if (bShouldQuit)
+               break;
+            if (nLevelNumber == -1)
+               break;
+
+            //Advance to next level if we can
+            nLevelNumber++;//TODO: Check if any more levels :)
+            LevelLoad(strLevelData, nLevelNumber);
+         }
+
+         if (bShouldQuit)
             break;
-         if( nLevelNumber == -1 )
+         if (nLevelNumber == -1)
             break;
       }
    }

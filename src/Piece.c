@@ -16,6 +16,7 @@ void CreatePiece(struct Piece* pPiece, int x, int y, TwoDigitsLib twodigits, str
    pPiece->m_pMetrics = pMetrics;
    pPiece->m_pConfig = pConfig;
    pPiece->m_pSelectionInformation = pSelectionInformation;
+   pPiece->m_bDrawBlack = 1;
 
    if( g_pFont == NULL ) {
       g_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/, 24);
@@ -46,43 +47,64 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 
    int r = 127, g = 127, b = 127;
 
-   if( pPiece->m_nX == GetCurrentX(pPiece->m_pSelectionInformation) && pPiece->m_nY == GetCurrentY(pPiece->m_pSelectionInformation) )
+   if( pPiece->m_nX == GetCurrentX(pPiece->m_pSelectionInformation) 
+      && pPiece->m_nY == GetCurrentY(pPiece->m_pSelectionInformation) 
+      && pPiece->m_bDrawBlack == 0 )
    {
       r = 255, g = 0, b = 0;
    }
 
    filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
 
-   radius = radius - radius/8;
+   radius = radius - radius/5;
 
-   r = 30, g = 144, b = 255;
-
-   enum TwoDigitMarking eMarking;
-   GetTwoDigitMarking(pPiece->m_TwoDigits, pPiece->m_nX, pPiece->m_nY, &eMarking);
-   if( eMarking == LeftMarked ) {
-      r = 0, g = 255, b = 0;
-   }
-   else if( eMarking == RightMarked)
+   if (pPiece->m_bDrawBlack)
    {
-      r = 0, g = 0, b = 255;
+      r = g = b = 0;
+      filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
+      return;
    }
-   filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
-
-   static char buffer[5];
-
-   int nSpotValue = GetTwoDigitsSpotValue(pPiece->m_TwoDigits, pPiece->m_nX, pPiece->m_nY);
-   if (nSpotValue > 0)
+   else
    {
-      IntToA(buffer, 4, nSpotValue);
+      r = 30, g = 144, b = 255;
 
-      int top = GetPieceValueTextTop(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
-      int left = GetPieceValueTextLeft(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
+      enum TwoDigitMarking eMarking;
+      GetTwoDigitMarking(pPiece->m_TwoDigits, pPiece->m_nX, pPiece->m_nY, &eMarking);
+      if (eMarking == LeftMarked) {
+         r = 0, g = 255, b = 0;
+      }
+      else if (eMarking == RightMarked)
+      {
+         r = 0, g = 0, b = 255;
+      }
+      filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
 
-      Font* pFont = g_pFont;
-      int nR = 0, nG = 0, nB = 0;
+      static char buffer[5];
 
-      DrawText(pScreen, pFont, left, top, buffer, nR, nG, nB);
+      int nSpotValue = GetTwoDigitsSpotValue(pPiece->m_TwoDigits, pPiece->m_nX, pPiece->m_nY);
+      if (nSpotValue > 0)
+      {
+         IntToA(buffer, 4, nSpotValue);
+
+         int top = GetPieceValueTextTop(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
+         int left = GetPieceValueTextLeft(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
+
+         Font* pFont = g_pFont;
+         int nR = 0, nG = 0, nB = 0;
+
+         DrawText(pScreen, pFont, left, top, buffer, nR, nG, nB);
+      }
    }
 }
 
- 
+int IsDrawingPieceBlack(struct Piece* pPiece)
+{
+   return pPiece->m_bDrawBlack;
+}
+
+void SetPieceBlack(struct Piece* pPiece, int nNewState)
+{
+   pPiece->m_bDrawBlack = nNewState;
+}
+
+

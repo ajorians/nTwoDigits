@@ -2,10 +2,8 @@
 #define REPLACEMENTS_H
 
 #ifndef _TINSPIRE
-//#define SCREEN_WIDTH	(320)
-//#define SCREEN_HEIGHT	(240)
-#define SCREEN_WIDTH	800//(1280)
-#define SCREEN_HEIGHT	600//(768)
+#define SCREEN_WIDTH	(320)
+#define SCREEN_HEIGHT	(240)
 #endif
 
 void IntToA(char* pstrBuffer, int bufferSize, int n);

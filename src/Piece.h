@@ -18,11 +18,15 @@ struct Piece
    struct Metrics* m_pMetrics;//Does not own
    struct Config* m_pConfig;//Does not own
    struct SelectionInformation* m_pSelectionInformation;//Does not own
+   int m_bDrawBlack;
 };
 
 void CreatePiece(struct Piece* pPiece, int x, int y, TwoDigitsLib twodigits, struct Metrics* pMetrics, struct SelectionInformation* pSelectionInformation, struct Config* pConfig);
 void FreePiece(struct Piece* pPiece);
 void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen);
+
+int IsDrawingPieceBlack(struct Piece* pPiece);
+void SetPieceBlack(struct Piece* pPiece, int nNewState);
 
 #endif
 

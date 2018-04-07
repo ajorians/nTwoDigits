@@ -10,6 +10,10 @@
 #include "SelectionInformation.h"
 #include "Font.h"
 
+#define GAME_QUIT      (0)
+#define GAME_LOOPING   (1)
+#define GAME_NEXTLEVEL (2)
+
 struct Game
 {
    TwoDigitsLib m_TwoDigits;
@@ -24,6 +28,8 @@ struct Game
    struct SDL_Surface* m_pScreen;//Does not own
    struct Background* m_pBackground;
    Font* m_pFont;
+   int m_bAnimating;
+   int m_nAnimationStep;
 };
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen);

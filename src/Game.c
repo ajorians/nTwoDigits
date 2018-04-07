@@ -6,6 +6,9 @@
 #include "Replacements.h"
 #include "YouWinGraphic.h"
 
+#define ANIMATE_PIECES_INOUT_STEPS     (5)
+#define DELAY_IN_ANIMATION_PIECES_STEP (10)
+
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
    *ppGame = malloc(sizeof(struct Game));
@@ -43,6 +46,8 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    }
 
    pGame->m_bShouldQuit = 0;
+   pGame->m_bAnimating = 1;
+   pGame->m_nAnimationStep = ANIMATE_PIECES_INOUT_STEPS;
 }
 
 void FreeGame(struct Game** ppGame)
@@ -78,10 +83,10 @@ void FreeGame(struct Game** ppGame)
 
 void DrawBoard(struct Game* pGame)
 {
-   SDL_FillRect(pGame->m_pScreen, NULL, SDL_MapRGB(pGame->m_pScreen->format, 255, 255, 255));
+   SDL_FillRect(pGame->m_pScreen, NULL, SDL_MapRGB(pGame->m_pScreen->format, 255, 215, 139));
 
    DrawBackground(pGame->m_pBackground);
-   
+
    int nWidth = GetTwoDigitsWidth(pGame->m_TwoDigits);
    int nHeight = GetTwoDigitsHeight(pGame->m_TwoDigits);
 
@@ -123,11 +128,16 @@ void DrawBoard(struct Game* pGame)
 
 void UpdateGameWon(struct Game* pGame)
 {
-   if( pGame->m_bWon && pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 250 ) {
+   if (pGame->m_bWon != 1)
+      return;
+
+   if( pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 250 ) {
 #ifdef _TINSPIRE
       SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, 1);
 #endif
    }
+
+   pGame->m_bAnimating = 1;
 }
 
 void Undo(struct Game* pGame)
@@ -206,16 +216,74 @@ int GamePollEvents(struct Game* pGame)
    return 1;
 }
 
+void HandleAnimations(struct Game* pGame)
+{
+   if (pGame->m_bAnimating == 0)
+      return;
+
+   if (pGame->m_nAnimationStep > 0)
+   {
+      SDL_Delay(DELAY_IN_ANIMATION_PIECES_STEP);
+      pGame->m_nAnimationStep--;
+      return;
+   }
+   pGame->m_nAnimationStep = ANIMATE_PIECES_INOUT_STEPS;
+
+   int nWidth = GetTwoDigitsWidth(pGame->m_TwoDigits);
+   int nHeight = GetTwoDigitsHeight(pGame->m_TwoDigits);
+
+   int nMadeChange = 0;
+
+   if (pGame->m_bWon)
+   {
+      for (int x = 0; x < nWidth; x++) {
+         for (int y = 0; y < nHeight; y++) {
+            struct Piece* pPiece = &pGame->m_apPieces[x + y*nWidth];
+            if (IsDrawingPieceBlack(pPiece) == 0)
+            {
+               SetPieceBlack(pPiece, 1);
+               nMadeChange = 1;
+               return;
+            }
+         }
+      }
+   }
+   else
+   {
+      for (int x = 0; x < nWidth; x++) {
+         for (int y = 0; y < nHeight; y++) {
+            struct Piece* pPiece = &pGame->m_apPieces[x + y*nWidth];
+            if (IsDrawingPieceBlack(pPiece) == 1)
+            {
+               SetPieceBlack(pPiece, 0);
+               nMadeChange = 1;
+               return;
+            }
+         }
+      }
+   }
+
+   if (nMadeChange == 0)
+   {
+      pGame->m_bAnimating = 0;
+   }
+}
+
 int GameLoop(struct Game* pGame)
 {
    if( GamePollEvents(pGame) == 0 )
-      return 0;
+      return GAME_QUIT;
+
+   HandleAnimations(pGame);
 
    DrawBoard(pGame);
 
    SDL_Delay(30);
 
-   return 1;
+   if (pGame->m_bWon == 1 && pGame->m_bAnimating == 0)
+      return GAME_NEXTLEVEL;
+
+   return GAME_LOOPING;
 }
 
 int GameShouldQuit(struct Game* pGame)
