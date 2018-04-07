@@ -5,6 +5,7 @@
 #include <SDL/SDL.h>
 #include "Startup.h"
 #include "MainMenu.h"
+#include "LevelMenu.h"
 #include "Game.h"
 #include "Options.h"
 #include "Help.h"
@@ -31,6 +32,9 @@ int WinMain(int argc, char *argv[])
 int main(int argc, char *argv[])
 #endif
 {
+#ifdef _WIN32
+   (argv);
+#endif
 #ifdef _TINSPIRE
    ArchiveSetCurrentDirectory( argv[0] );
    if( argc != 2 ) {
@@ -86,21 +90,24 @@ int main(int argc, char *argv[])
    CreateConfig(&pConfig);
    while(1) {
       int bShowHelp = 0, bShowOptions = 0;
+      int bShouldQuit = 0;
       if( argc != 2 ) {
          nLevelNumber = GetLastLevel(pConfig);
+
          struct MainMenu* pMenu = NULL;
-         int bShouldQuit = 0;
-         CreateMainMenu(&pMenu, nLevelNumber, pConfig, pScreen);
+         CreateMainMenu(&pMenu, pConfig, pScreen);
          while(MainMenuLoop(pMenu)){}
          bShouldQuit = MainMenuShouldQuit(pMenu);
          bShowOptions = MainMenuShowOptions(pMenu);
          bShowHelp = MainMenuShowHelp(pMenu);
-         if( bShouldQuit == 0 && bShowOptions == 0 && bShowHelp == 0 ) {
-            nLevelNumber = MainMenuGetLevelNum(pMenu);
-	    printf("Loading level: %d\n", nLevelNumber);
-            LevelLoad(strLevelData, nLevelNumber);
-         }
          FreeMainMenu(&pMenu);
+
+     //    if( bShouldQuit == 0 && bShowOptions == 0 && bShowHelp == 0 ) {
+     //       nLevelNumber = MainMenuGetLevelNum(pMenu);
+	    //printf("Loading level: %d\n", nLevelNumber);
+     //       LevelLoad(strLevelData, nLevelNumber);
+     //    }
+         
 
          if( bShouldQuit )
             break;
@@ -135,8 +142,31 @@ int main(int argc, char *argv[])
          continue;
       }
       else {
+
+         if (argc != 2) {
+            //Show LevelSelectScreen
+
+            struct LevelMenu* pLevelMenu = NULL;
+            CreateLevelMenu(&pLevelMenu, nLevelNumber, pConfig, pScreen);
+            while (LevelMenuLoop(pLevelMenu)) {}
+            bShouldQuit = LevelMenuShouldQuit(pLevelMenu);
+
+            if( bShouldQuit == 0 ) {
+               nLevelNumber = LevelMenuGetLevelNum(pLevelMenu);
+               printf("Loading level: %d\n", nLevelNumber);
+               LevelLoad(strLevelData, nLevelNumber);
+            }
+
+            FreeLevelMenu(&pLevelMenu);
+
+            if( bShouldQuit)
+               continue;
+         }
+
+         if (bShouldQuit)
+            break;
+
          struct Game* pGame = NULL;
-         int bShouldQuit = 0;
 
          while (1) {
 
@@ -158,8 +188,15 @@ int main(int argc, char *argv[])
                break;
 
             //Advance to next level if we can
-            nLevelNumber++;//TODO: Check if any more levels :)
-            LevelLoad(strLevelData, nLevelNumber);
+            if (nLevelNumber < 249)
+            {
+               nLevelNumber++;
+               LevelLoad(strLevelData, nLevelNumber);
+            }
+            else
+            {
+               continue;
+            }
          }
 
          if (bShouldQuit)

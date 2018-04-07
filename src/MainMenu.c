@@ -11,9 +11,7 @@
 
 #define MENU_SELECTOR_LINE_WIDTH (2)
 
-void UpdateDimensionAndOperations(struct MainMenu* pMenu, int nLevelNum);
-
-void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
+void CreateMainMenu(struct MainMenu** ppMenu, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
    *ppMenu = malloc(sizeof(struct MainMenu));
    struct MainMenu* pMenu = (*ppMenu);
@@ -22,14 +20,8 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_pScreen = pScreen;
 
    pMenu->m_eChoice = Play;
-   (nLevelNum);
-   pMenu->m_nCurrentLevel = nLevelNum >= 1 ? nLevelNum : 1;
-
-   UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
 
    pMenu->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 24);
-
-   CreateStarDrawer( &pMenu->m_pStarDrawer );
 
 #ifdef _TINSPIRE
    pMenu->m_pTitle = nSDL_LoadImage(image_KenKen);
@@ -41,8 +33,6 @@ void FreeMainMenu(struct MainMenu** ppMenu)
    struct MainMenu* pMenu = *ppMenu;
 
    FreeFont(pMenu->m_pFont);
-
-   FreeStarDrawer( &pMenu->m_pStarDrawer );
 
    pMenu->m_pConfig = NULL;//Does not own
    pMenu->m_pScreen = NULL;//Does not own
@@ -75,11 +65,6 @@ int PollEvents(struct MainMenu* pMenu)
 
             case SDLK_LEFT:
                if (pMenu->m_eChoice == Play) {
-                  if (pMenu->m_nCurrentLevel > 1) {
-                     pMenu->m_nCurrentLevel--;
-		     SetLastLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel);
-                     UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
-                  }
                }
 
                else if (pMenu->m_eChoice == Help) {
@@ -89,11 +74,6 @@ int PollEvents(struct MainMenu* pMenu)
 
             case SDLK_RIGHT:
                if (pMenu->m_eChoice == Play) {
-                  if (pMenu->m_nCurrentLevel < 249) {
-                     pMenu->m_nCurrentLevel++;
-		     SetLastLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel);
-                     UpdateDimensionAndOperations(pMenu, pMenu->m_nCurrentLevel);
-                  }
                }
 
                else if (pMenu->m_eChoice == Options) {
@@ -130,25 +110,10 @@ int PollEvents(struct MainMenu* pMenu)
    return 1;
 }
 
-void UpdateDimensionAndOperations(struct MainMenu* pMenu, int nLevelNum)
-{
-   (pMenu);
-   (nLevelNum);
-   /*char strLevelData[2048];
-   LevelLoad(strLevelData, nLevelNum);
-   KenKenLib kenken;
-   KenKenLibCreate(&kenken, strLevelData);
-
-   pMenu->m_nDimension = GetKenKenWidth(kenken);
-   pMenu->m_eOperations = GetKenKenOperations(kenken);
-
-   KenKenLibFree(&kenken);*/
-}
-
 void UpdateDisplay(struct MainMenu* pMenu)
 {
 #ifndef _TINSPIRE
-   SDL_FillRect(pMenu->m_pScreen, NULL, SDL_MapRGB(pMenu->m_pScreen->format, 0, 0, 0));
+   SDL_FillRect(pMenu->m_pScreen, NULL, SDL_MapRGB(pMenu->m_pScreen->format, 255, 215, 139));
 #endif
 
 #ifdef _TINSPIRE
@@ -166,49 +131,6 @@ void UpdateDisplay(struct MainMenu* pMenu)
 
    SDL_BlitSurface(pMenu->m_pTitle, &rectSrc, pMenu->m_pScreen, &rectDst);
 #endif
-
-   char levelNumBuffer[4];
-   IntToA(levelNumBuffer, 4, pMenu->m_nCurrentLevel);
-
-   char buffer[16];
-   //StringCopy(buffer, 16, "");
-   StringCopy(buffer, 16, "Level #");
-   StringAppend(buffer, 16, levelNumBuffer);
-
-   int x = SCREEN_WIDTH/2+15;
-   int y = SCREEN_HEIGHT/2 - 34;
-
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 255, 255, 255);
-
-   if( GetBeatLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel-1/*ToBase 0*/) == 1 )
-      DrawStar(pMenu->m_pStarDrawer, pMenu->m_pScreen, x+22, y-5);
-
-   /*IntToA(levelNumBuffer, 4, pMenu->m_nDimension);
-   StringCopy(buffer, 16, "");
-   StringAppend(buffer, 16, levelNumBuffer);
-   StringAppend(buffer, 16, " x ");
-   StringAppend(buffer, 16, levelNumBuffer);
-   x += 0;
-   y += 16;
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 0, 0, 0);
-
-   StringCopy(buffer, 16, "");
-   if( (pMenu->m_eOperations & AddOperation) == AddOperation) {
-      StringAppend(buffer, 16, "+ ");
-   }
-   if ((pMenu->m_eOperations & SubtractOperation) == SubtractOperation) {
-      StringAppend(buffer, 16, "- ");
-   }
-   if ((pMenu->m_eOperations & MultiplyOperation) == MultiplyOperation){
-      StringAppend(buffer, 16, "x ");
-   }
-   if ((pMenu->m_eOperations & DivideOperation) == DivideOperation) {
-      StringAppend(buffer, 16, "/");
-   }
-
-   x -= 0;
-   y += 14;
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, x, y, buffer, 0, 0, 0);*/
 
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, 20, SCREEN_HEIGHT - 27, "Options", 0, 0, 0);
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 27, "Help", 0, 0, 0);
@@ -270,10 +192,5 @@ int MainMenuShowOptions(struct MainMenu* pMenu)
 int MainMenuShowHelp(struct MainMenu* pMenu)
 {
    return pMenu->m_eChoice == Help;
-}
-
-int MainMenuGetLevelNum(struct MainMenu* pMenu)
-{
-   return pMenu->m_nCurrentLevel;
 }
 

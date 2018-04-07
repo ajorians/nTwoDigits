@@ -54,14 +54,14 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
       r = 255, g = 0, b = 0;
    }
 
-   filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
+   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
 
    radius = radius - radius/5;
 
    if (pPiece->m_bDrawBlack)
    {
       r = g = b = 0;
-      filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
+      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
       return;
    }
    else
@@ -77,7 +77,7 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
       {
          r = 0, g = 0, b = 255;
       }
-      filledEllipseRGBA(pScreen, x, y, radius, radius, r, g, b, 255);
+      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
 
       static char buffer[5];
 
