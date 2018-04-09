@@ -8,6 +8,10 @@
 #include <stdarg.h>
 #endif
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 void IntToA(char* pstrBuffer, int bufferSize, int n)
 {
 #ifdef _TINSPIRE
@@ -43,9 +47,18 @@ void StringAppend(char* pstrBuffer, int nSize, char* pstrAddition)
 
 void StringFmt(char* pstrBuffer, int nSize, char* pstrFormat, ...)
 {
-   va_list args = NULL;
+   va_list args
+#ifdef _WIN32
+    = NULL
+#endif
+   ;
+
    va_start(args, pstrFormat);
+#ifdef _WIN32
    vsprintf_s(pstrBuffer, nSize, pstrFormat, args);
+#else
+   vsprintf(pstrBuffer, pstrFormat, args);
+#endif
    va_end(args);
 }
 
