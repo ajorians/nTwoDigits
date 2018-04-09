@@ -5,12 +5,8 @@
 #include <os.h>
 #else
 #include <stdio.h>
+#endif
 #include <stdarg.h>
-#endif
-
-#ifndef NULL
-#define NULL 0
-#endif
 
 void IntToA(char* pstrBuffer, int bufferSize, int n)
 {

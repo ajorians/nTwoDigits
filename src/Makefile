@@ -3,7 +3,7 @@ LD = nspire-ld
 GENZEHN = genzehn
 
 GCCFLAGS = -Os -Wall -W -marm -Wno-unused-parameter -I include
-LDFLAGS = -L lib -lndls -lKenKen -lArchive
+LDFLAGS = -L lib -lndls -lTwoDigits -lArchive
 OBJCOPY := "$(shell which arm-elf-objcopy 2>/dev/null)"
 ifeq (${OBJCOPY},"")
 	OBJCOPY := arm-none-eabi-objcopy
