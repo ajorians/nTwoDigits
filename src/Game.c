@@ -236,8 +236,8 @@ void HandleAnimations(struct Game* pGame)
 
    if (pGame->m_bWon)
    {
-      for (int x = 0; x < nWidth; x++) {
-         for (int y = 0; y < nHeight; y++) {
+      for (int y = 0; y < nHeight; y++) {
+         for (int x = 0; x < nWidth; x++) {
             struct Piece* pPiece = &pGame->m_apPieces[x + y*nWidth];
             if (IsDrawingPieceBlack(pPiece) == 0)
             {
@@ -250,8 +250,8 @@ void HandleAnimations(struct Game* pGame)
    }
    else
    {
-      for (int x = 0; x < nWidth; x++) {
-         for (int y = 0; y < nHeight; y++) {
+      for (int y = 0; y < nHeight; y++) {
+         for (int x = 0; x < nWidth; x++) {
             struct Piece* pPiece = &pGame->m_apPieces[x + y*nWidth];
             if (IsDrawingPieceBlack(pPiece) == 1)
             {

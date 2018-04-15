@@ -24,7 +24,7 @@ void CreateMainMenu(struct MainMenu** ppMenu, struct Config* pConfig, struct SDL
    pMenu->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 24);
 
 #ifdef _TINSPIRE
-   pMenu->m_pTitle = nSDL_LoadImage(image_KenKen);
+   pMenu->m_pTitle = nSDL_LoadImage(image_TwoDigits);
 #endif
 }
 
@@ -132,15 +132,29 @@ void UpdateDisplay(struct MainMenu* pMenu)
    SDL_BlitSurface(pMenu->m_pTitle, &rectSrc, pMenu->m_pScreen, &rectDst);
 #endif
 
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, 20, SCREEN_HEIGHT - 27, "Options", 0, 0, 0);
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 27, "Help", 0, 0, 0);
-
-   int r = 255, g = 0, b = 0, a = 200;
-
-   int left = SCREEN_WIDTH / 2 - 62;
+   int left = SCREEN_WIDTH / 2 - 25;
    int top = SCREEN_HEIGHT / 2 - 45;
-   int right = left + 133;
-   int bottom = top + 78;
+   int right = left + 50;
+   int bottom = top + 27;
+
+   SDL_Rect rectBK;
+   rectBK.w = right - left;
+   rectBK.h = bottom - top;
+   rectBK.x = left;
+   rectBK.y = top;
+   SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Play", 0, 0, 0);
+
+   rectBK.x = 7;
+   rectBK.y = SCREEN_HEIGHT - 32;
+   rectBK.w = 80;
+   SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Options", 0, 0, 0);
+
+   rectBK.x = SCREEN_WIDTH - 60;
+   rectBK.w = 53;
+   SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Help", 0, 0, 0);
 
    if (pMenu->m_eChoice == Options)
    {
@@ -156,6 +170,8 @@ void UpdateDisplay(struct MainMenu* pMenu)
       right = SCREEN_WIDTH-7;
       bottom = SCREEN_HEIGHT-5;
    }
+
+   int r = 255, g = 0, b = 0, a = 200;
 
    //Top
    thickLineRGBA(pMenu->m_pScreen, (Sint16)left, (Sint16)top, (Sint16)right, (Sint16)top, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
