@@ -102,13 +102,6 @@ int main(int argc, char *argv[])
          bShowHelp = MainMenuShowHelp(pMenu);
          FreeMainMenu(&pMenu);
 
-     //    if( bShouldQuit == 0 && bShowOptions == 0 && bShowHelp == 0 ) {
-     //       nLevelNumber = MainMenuGetLevelNum(pMenu);
-	    //printf("Loading level: %d\n", nLevelNumber);
-     //       LevelLoad(strLevelData, nLevelNumber);
-     //    }
-         
-
          if( bShouldQuit )
             break;
       }
@@ -143,66 +136,62 @@ int main(int argc, char *argv[])
       }
       else {
 
-         if (argc != 2) {
-            //Show LevelSelectScreen
+         while(1) {
+            if (argc != 2) {
+               //Show LevelSelectScreen
 
-            struct LevelMenu* pLevelMenu = NULL;
-            CreateLevelMenu(&pLevelMenu, nLevelNumber, pConfig, pScreen);
-            while (LevelMenuLoop(pLevelMenu)) {}
-            bShouldQuit = LevelMenuShouldQuit(pLevelMenu);
+               struct LevelMenu *pLevelMenu = NULL;
+               CreateLevelMenu(&pLevelMenu, nLevelNumber, pConfig, pScreen);
+               while (LevelMenuLoop(pLevelMenu)) {}
+               bShouldQuit = LevelMenuShouldQuit(pLevelMenu);
 
-            if( bShouldQuit == 0 ) {
-               nLevelNumber = LevelMenuGetLevelNum(pLevelMenu);
-               printf("Loading level: %d\n", nLevelNumber);
-               LevelLoad(strLevelData, nLevelNumber);
-            }
+               if (bShouldQuit == 0) {
+                  nLevelNumber = LevelMenuGetLevelNum(pLevelMenu);
+                  printf("Loading level: %d\n", nLevelNumber);
+                  LevelLoad(strLevelData, nLevelNumber);
+               }
 
-            FreeLevelMenu(&pLevelMenu);
+               FreeLevelMenu(&pLevelMenu);
 
-            if( bShouldQuit)
-               continue;
-         }
-
-         if (bShouldQuit)
-            break;
-
-         struct Game* pGame = NULL;
-
-         while (1) {
-
-            CreateGame(&pGame, strLevelData, nLevelNumber, pConfig, pScreen);
-            int nLoop;
-            while (1) {
-               nLoop = GameLoop(pGame);
-               if (nLoop != GAME_LOOPING)
+               if (bShouldQuit)
                   break;
             }
-            bShouldQuit = GameShouldQuit(pGame);
-            FreeGame(&pGame);
 
-            if (nLoop == GAME_QUIT)
-               break;
+            struct Game *pGame = NULL;
+
+            while (1) {
+
+               CreateGame(&pGame, strLevelData, nLevelNumber, pConfig, pScreen);
+               int nLoop;
+               while (1) {
+                  nLoop = GameLoop(pGame);
+                  if (nLoop != GAME_LOOPING)
+                     break;
+               }
+               bShouldQuit = GameShouldQuit(pGame);
+               FreeGame(&pGame);
+
+               if (nLoop == GAME_QUIT)
+                  break;
+               if (bShouldQuit)
+                  break;
+               if (nLevelNumber == -1)
+                  break;
+
+               //Advance to next level if we can
+               if (nLevelNumber < 249) {
+                  nLevelNumber++;
+                  LevelLoad(strLevelData, nLevelNumber);
+               } else {
+                  continue;
+               }
+            }
+
             if (bShouldQuit)
                break;
             if (nLevelNumber == -1)
                break;
-
-            //Advance to next level if we can
-            if (nLevelNumber < 249)
-            {
-               nLevelNumber++;
-               LevelLoad(strLevelData, nLevelNumber);
-            }
-            else
-            {
-               continue;
-            }
          }
-
-         if (bShouldQuit)
-            break;
-         if (nLevelNumber == -1)
-            break;
       }
    }
 

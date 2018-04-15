@@ -147,9 +147,6 @@ void LevelMenuUpdateDisplay(struct LevelMenu* pMenu)
    SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, buffer, 255, 255, 255);
 
-   if( GetBeatLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel-1/*ToBase 0*/) == 1 )
-      DrawStar(pMenu->m_pStarDrawer, pMenu->m_pScreen, rectBK.x+22, rectBK.y-5);
-
    int nDescriptX = rectBK.x + 12;
    int nDescriptY = rectBK.y + 29;
 
@@ -228,6 +225,9 @@ void LevelMenuUpdateDisplay(struct LevelMenu* pMenu)
    thickLineRGBA(pMenu->m_pScreen, (Sint16)left, (Sint16)bottom, (Sint16)right, (Sint16)bottom, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
    //Right
    thickLineRGBA(pMenu->m_pScreen, (Sint16)right, (Sint16)top, (Sint16)right, (Sint16)bottom, MENU_SELECTOR_LINE_WIDTH, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a);
+
+   if( GetBeatLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel-1/*ToBase 0*/) == 1 )
+      DrawStar(pMenu->m_pStarDrawer, pMenu->m_pScreen, rectBK.x-4, rectBK.y+4);
 
    SDL_UpdateRect(pMenu->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
