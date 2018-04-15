@@ -106,13 +106,17 @@ void DrawBoard(struct Game* pGame)
    rectTallyBox.w = GetTallyBoxWidth(pGame->m_pMetrics);
    rectTallyBox.h = GetTallyBoxHeight(pGame->m_pMetrics);
    SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
+
+   int nTextX = rectTallyBox.x + rectTallyBox.w/2 - 9;
    IntToA(buffer, sizeof(buffer), GetTwoDigitsLeftMarkedTotal(pGame->m_TwoDigits));
-   DrawText(pGame->m_pScreen, pGame->m_pFont, rectTallyBox.x + rectTallyBox.w/2, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
+   DrawText(pGame->m_pScreen, pGame->m_pFont, nTextX, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
 
    rectTallyBox.x = GetRightTallyBoxLeft(pGame->m_pMetrics);
    SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
+
+   nTextX = rectTallyBox.x + rectTallyBox.w/2 - 9;
    IntToA(buffer, sizeof(buffer), GetTwoDigitsRightMarkedTotal(pGame->m_TwoDigits));
-   DrawText(pGame->m_pScreen, pGame->m_pFont, rectTallyBox.x + rectTallyBox.w/2, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
+   DrawText(pGame->m_pScreen, pGame->m_pFont, nTextX, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
 
    if( pGame->m_bWon == 1 && pGame->m_pYouWinGraphic != NULL ) {
       SDL_Rect rectYouWin;
