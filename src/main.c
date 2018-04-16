@@ -19,7 +19,6 @@
 #endif
 #include "Replacements.h"
 
-#define SCREEN_BIT_DEPTH        (16)
 #ifdef _TINSPIRE
 #define SCREEN_VIDEO_MODE (SDL_SWSURFACE|SDL_FULLSCREEN|SDL_HWPALETTE)
 #else

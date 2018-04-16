@@ -6,6 +6,8 @@
 #define SCREEN_HEIGHT	(240)
 #endif
 
+#define SCREEN_BIT_DEPTH        (16)
+
 void IntToA(char* pstrBuffer, int bufferSize, int n);
 
 void StringCopy(char* pstrOutput, int bufferSize, char* pstrInput);

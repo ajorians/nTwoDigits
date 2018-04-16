@@ -20,6 +20,9 @@ struct LevelMenu
    struct Config* m_pConfig;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
    struct SDL_Surface* m_pTitle;
+   struct SDL_Surface* m_pLevelSurface;
+   int m_nScrollY;
+   int m_nSrcScrollY;
 };
 
 void CreateLevelMenu(struct LevelMenu** ppMenu, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen);

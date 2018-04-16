@@ -137,7 +137,7 @@ void UpdateGameWon(struct Game* pGame)
 
    if( pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 250 ) {
 #ifdef _TINSPIRE
-      SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, 1);
+      SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum, 1);
 #endif
    }
 
