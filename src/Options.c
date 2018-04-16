@@ -116,23 +116,19 @@ void UpdateOptionsDisplay(struct Options* pOptions)
    DestRect.h = SCREEN_HEIGHT;
    SDL_FillRect(pOptions->m_pScreen, &DestRect, SDL_MapRGB(pOptions->m_pScreen->format, 0x87, 0xCE, 0xEB));
     
-    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 50,  
-"The possible values for a set of\n\
-cells displayed below the game board.", 255, 255, 255);
-
-    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 110, "Animated background:", 255, 255, 255);
+    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 50, "Animated background:", 255, 255, 255);
     if( GetDrawBackground(pOptions->m_pConfig) == 1 ) {
-       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 110, "On", 255, 255, 255);
+       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 50, "On", 255, 255, 255);
     } else {
-       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 110, "Off", 255, 255, 255);
+       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 50, "Off", 255, 255, 255);
     }
     
-    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 130,
+    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 70,
 "Whether the background moves\n\
 during the game.", 255, 255, 255);
 
     if( pOptions->m_nCurrentOption == 0 )
-       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 105, 210, 22, 1);
+       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 55, 210, 22, 1);
 
    SDL_UpdateRect(pOptions->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

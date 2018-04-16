@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
                   nLevelNumber++;
                   LevelLoad(strLevelData, nLevelNumber);
                } else {
-                  continue;
+                  break;
                }
             }
 

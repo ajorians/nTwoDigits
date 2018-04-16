@@ -153,9 +153,9 @@ void DrawLevelPiece(int x, int y, int nLevelNumber, int bSelected, Font* pFont, 
    int top = y;
    int left = x - 3;
    if( nLevelNumber >= 10 )
-      x -= 5;
+      left -= 3;
    if( nLevelNumber >= 100 )
-      x -= 5;
+      left -= 3;
 
    int nR = 0, nG = 0, nB = 0;
    DrawText(pScreen, pFont, left, top, buffer, nR, nG, nB);
@@ -240,7 +240,7 @@ void DrawLevelSurface( struct LevelMenu* pMenu, struct SDL_Surface* pSurface, in
             continue;
          }
 
-         DrawLevelPiece(x, y, level, selected, pMenu->m_pFont, pSurface, GetBeatLevel(pMenu->m_pConfig, level), pMenu->m_pStarDrawer);
+         DrawLevelPiece(x, y, level, selected, pMenu->m_pFont, pSurface, GetBeatLevel(pMenu->m_pConfig, level-1/*To 0-based*/), pMenu->m_pStarDrawer);
          x+= g_LevelPieceWidth + 5;
          nPos++;
          if( nPos >= 3 )
