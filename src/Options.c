@@ -11,7 +11,7 @@ void CreateOptions(struct Options** ppOptions, struct Config* pConfig, struct SD
    *ppOptions = malloc(sizeof(struct Options));
    struct Options* pOptions = (*ppOptions);
 
-   pOptions->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
+   pOptions->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
    pOptions->m_nCurrentOption = 0;
 
    pOptions->m_pConfig = pConfig;

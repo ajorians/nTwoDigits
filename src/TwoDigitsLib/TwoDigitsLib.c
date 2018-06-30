@@ -337,7 +337,7 @@ void AddUndo(TwoDigitsLib api, int x, int y, enum TwoDigitMarking eMarking)
 
    pAction->x = x;
    pAction->y = y;
-   //pAction->eMarking = eMarking;
+   pAction->eMarking = eMarking;
 
    struct TwoDigitAction* pRoot = pT->m_pUndoActions;
    pAction->m_pNext = pRoot;
@@ -358,7 +358,7 @@ void AddRedo(TwoDigitsLib api, int x, int y, int value)
 
    pAction->x = x;
    pAction->y = y;
-   //pAction->value = value;
+   pAction->eMarking = value;
 
    struct TwoDigitAction* pRoot = pT->m_pRedoActions;
    pAction->m_pNext = pRoot;
@@ -376,8 +376,8 @@ int TwoDigitsUndo(TwoDigitsLib api)
       return TWODIGITSLIB_CANNOT_UNDO;
 
    pT->m_pUndoActions = pRoot->m_pNext;
-   AddRedo(api, pRoot->x, pRoot->y, GetTwoDigitsSpotValue(api, pRoot->x, pRoot->y));
-   //GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_nValue = pRoot->value;
+   AddRedo(api, pRoot->x, pRoot->y, GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_eMarking);
+   GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_eMarking = pRoot->eMarking;
 
    free(pRoot);
    pRoot = NULL;
@@ -396,8 +396,8 @@ int TwoDigitsRedo(TwoDigitsLib api)
       return TWODIGITSLIB_CANNOT_REDO;
 
    pT->m_pRedoActions = pRoot->m_pNext;
-   AddUndo(api, pRoot->x, pRoot->y, GetTwoDigitsSpotValue(api, pRoot->x, pRoot->y));
-   //GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_nValue = pRoot->value;
+   AddUndo(api, pRoot->x, pRoot->y, GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_eMarking);
+   GetAt(pT->m_pBoard, pRoot->x, pRoot->y)->m_eMarking = pRoot->eMarking;
 
    free(pRoot);
    pRoot = NULL;

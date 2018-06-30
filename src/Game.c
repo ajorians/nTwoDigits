@@ -194,6 +194,7 @@ int GamePollEvents(struct Game* pGame)
                      Move(pGame->m_pSelectionInformation, Right);
 		  }
 		  break;
+		  case SDLK_EQUALS:
 		case SDLK_PLUS:
 		  Redo(pGame);
 		  break;

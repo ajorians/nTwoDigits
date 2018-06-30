@@ -11,7 +11,7 @@ void CreateHelp(struct Help** ppHelp, struct SDL_Surface* pScreen)
    *ppHelp = malloc(sizeof(struct Help));
    struct Help* pHelp = (*ppHelp);
 
-   pHelp->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
+   pHelp->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
 
    pHelp->m_pScreen = pScreen;
 }
