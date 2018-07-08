@@ -80,9 +80,22 @@ void UpdateHelpDisplay(struct Help* pHelp)
 
    DrawText(pHelp->m_pScreen, pHelp->m_pFont, 10, 10, 
 "How to play:\n\
-Select one or more cells in one set\n\
-and another set where each sets sum\n\
-all add up\n\
+Press the ctrl key on a cell to\n\
+put it in the left group.  Press\n\
+it again to put it in the right group\n\
+Press it yet again to make it\n\
+not be in a group.  Use the arrow\n\
+keys to move to other cells.\n\
+\n\
+You win the level when the total\n\
+of the cells in the left group\n\
+add up to the total of the cells\n\
+in the right group.  The totals\n\
+are displayed at the bottom.\n\
+\n\
+In all of the included levels\n\
+you don't need to use all cells\n\
+to win.\n\
 \n\
 Have fun!", 255, 255, 255);
 
