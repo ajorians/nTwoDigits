@@ -45,39 +45,72 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 
    int radius = SDL_min(w/2, h/2);
 
-   int r = 127, g = 127, b = 127;
+   int r = 128, g = 128, b = 128, a = 255;
 
    if( pPiece->m_nX == GetCurrentX(pPiece->m_pSelectionInformation) 
       && pPiece->m_nY == GetCurrentY(pPiece->m_pSelectionInformation) 
       && pPiece->m_bDrawBlack == 0 )
    {
       r = 255, g = 0, b = 0;
+#ifdef _TINSPIRE
+      if( !has_colors )
+      {
+        r = 169, g = 169, b = 169;
+      }
+#endif
    }
 
-   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
+   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, a);
 
-   radius = radius - radius/5;
+   int nPortionRim = 5;
+#ifdef _TINSPIRE
+   if( !has_colors ) {
+       if( pPiece->m_nX == GetCurrentX(pPiece->m_pSelectionInformation)
+      && pPiece->m_nY == GetCurrentY(pPiece->m_pSelectionInformation)
+      && pPiece->m_bDrawBlack == 0 )
+           nPortionRim = 9;
+   }
+#endif
+   radius = radius - radius/nPortionRim;
 
    if (pPiece->m_bDrawBlack)
    {
       r = g = b = 0;
-      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
+      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, a);
       return;
    }
    else
    {
       r = 30, g = 144, b = 255;
+#ifdef _TINSPIRE
+      if( !has_colors )
+      {
+         r = 192, g = 192, b = 192, a = 255;
+      }
+#endif
 
       enum TwoDigitMarking eMarking;
       GetTwoDigitMarking(pPiece->m_TwoDigits, pPiece->m_nX, pPiece->m_nY, &eMarking);
       if (eMarking == LeftMarked) {
          r = 0, g = 255, b = 0;
+#ifdef _TINSPIRE
+      if( !has_colors )
+      {
+         r = 169, g = 169, b = 169, a = 255;
+      }
+#endif
       }
       else if (eMarking == RightMarked)
       {
          r = 0, g = 0, b = 255;
+#ifdef _TINSPIRE
+      if( !has_colors )
+      {
+         r = 128, g = 128, b = 128, a = 255;
       }
-      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
+#endif
+      }
+      filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, a);
 
       static char buffer[5];
 

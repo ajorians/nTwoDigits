@@ -63,6 +63,7 @@ int PollEvents(struct MainMenu* pMenu)
                return 0;
                break;
 
+                case SDLK_4:
             case SDLK_LEFT:
                if (pMenu->m_eChoice == Play) {
                }
@@ -72,6 +73,7 @@ int PollEvents(struct MainMenu* pMenu)
                }
                break;
 
+                case SDLK_6:
             case SDLK_RIGHT:
                if (pMenu->m_eChoice == Play) {
                }
@@ -81,18 +83,21 @@ int PollEvents(struct MainMenu* pMenu)
                }
                break;
 
+                case SDLK_8:
 	       case SDLK_UP:
 		  if( pMenu->m_eChoice == Options || pMenu->m_eChoice == Help) {
            pMenu->m_eChoice = Play;
 		     }
 		  break;
 
+                case SDLK_2:
 	       case SDLK_DOWN:
              if (pMenu->m_eChoice == Play ) {
                 pMenu->m_eChoice = Options;
              }
 		  break;
 
+                case SDLK_5:
                case SDLK_SPACE:
                case SDLK_RETURN:
                case SDLK_LCTRL:
@@ -112,9 +117,16 @@ int PollEvents(struct MainMenu* pMenu)
 
 void UpdateDisplay(struct MainMenu* pMenu)
 {
-#ifndef _TINSPIRE
+#ifdef _TINSPIRE
+    if( !has_colors )
+    {
+        SDL_FillRect(pMenu->m_pScreen, NULL, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+    }
+#else
    SDL_FillRect(pMenu->m_pScreen, NULL, SDL_MapRGB(pMenu->m_pScreen->format, 255, 215, 139));
 #endif
+
+   int rText = 0, gText = 0, bText = 0;
 
 #ifdef _TINSPIRE
    SDL_Rect rectSrc, rectDst;
@@ -129,7 +141,13 @@ void UpdateDisplay(struct MainMenu* pMenu)
    rectDst.x = 0;
    rectDst.y = 0;
 
+   if( has_colors ) {
    SDL_BlitSurface(pMenu->m_pTitle, &rectSrc, pMenu->m_pScreen, &rectDst);
+   }
+
+   if( !has_colors ) {
+      rText = 255, gText = 255, bText = 255;
+   }
 #endif
 
    int left = SCREEN_WIDTH / 2 - 25;
@@ -142,19 +160,29 @@ void UpdateDisplay(struct MainMenu* pMenu)
    rectBK.h = bottom - top;
    rectBK.x = left;
    rectBK.y = top;
+#ifdef _TINSPIRE
+   if( has_colors )
+#endif
    SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Play", 0, 0, 0);
+
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Play", rText, gText, bText);
 
    rectBK.x = 7;
    rectBK.y = SCREEN_HEIGHT - 32;
    rectBK.w = 80;
+#ifdef _TINSPIRE
+   if( has_colors )
+#endif
    SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Options", 0, 0, 0);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Options", rText, gText, bText);
 
    rectBK.x = SCREEN_WIDTH - 60;
    rectBK.w = 53;
+#ifdef _TINSPIRE
+   if( has_colors )
+#endif
    SDL_FillRect(pMenu->m_pScreen, &rectBK, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Help", 0, 0, 0);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, rectBK.x + 12, rectBK.y + 9, "Help", rText, gText, bText);
 
    if (pMenu->m_eChoice == Options)
    {

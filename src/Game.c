@@ -105,6 +105,9 @@ void DrawBoard(struct Game* pGame)
    rectTallyBox.y = GetTallyBoxTop(pGame->m_pMetrics);
    rectTallyBox.w = GetTallyBoxWidth(pGame->m_pMetrics);
    rectTallyBox.h = GetTallyBoxHeight(pGame->m_pMetrics);
+#ifdef _TINSPIRE
+   if( has_colors )
+#endif
    SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
 
    int nTextX = rectTallyBox.x + rectTallyBox.w/2 - 9;
@@ -112,6 +115,9 @@ void DrawBoard(struct Game* pGame)
    DrawText(pGame->m_pScreen, pGame->m_pFont, nTextX, rectTallyBox.y + rectTallyBox.h/2, buffer, 0, 0, 0);
 
    rectTallyBox.x = GetRightTallyBoxLeft(pGame->m_pMetrics);
+#ifdef _TINSPIRE
+    if( has_colors )
+#endif
    SDL_FillRect(pGame->m_pScreen, &rectTallyBox, SDL_MapRGB(pGame->m_pScreen->format, 0, 255, 0));
 
    nTextX = rectTallyBox.x + rectTallyBox.w/2 - 9;
@@ -172,24 +178,28 @@ int GamePollEvents(struct Game* pGame)
                   break;
 
                case SDLK_UP:
+               case SDLK_8:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelectionInformation, Up);
 		  }
                   break;
 
 	       case SDLK_DOWN:
+	       case SDLK_2:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelectionInformation, Down);
 		  }
                   break;
 
                case SDLK_LEFT:
+               case SDLK_4:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelectionInformation, Left);
 		  }
                   break;
 
                case SDLK_RIGHT:
+               case SDLK_6:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelectionInformation, Right);
 		  }
@@ -201,6 +211,7 @@ int GamePollEvents(struct Game* pGame)
 		case SDLK_MINUS:
 		  Undo(pGame);
                   break;
+                case SDLK_5:
                case SDLK_RETURN:
                   ToggleTwoDigitsSpot(pGame->m_TwoDigits, GetCurrentX(pGame->m_pSelectionInformation), GetCurrentY(pGame->m_pSelectionInformation));
                   pGame->m_bWon = IsTwoDigitsGameOver(pGame->m_TwoDigits);

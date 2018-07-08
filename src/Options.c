@@ -128,7 +128,7 @@ void UpdateOptionsDisplay(struct Options* pOptions)
 during the game.", 255, 255, 255);
 
     if( pOptions->m_nCurrentOption == 0 )
-       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 55, 210, 22, 1);
+       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 45, 210, 22, 1);
 
    SDL_UpdateRect(pOptions->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

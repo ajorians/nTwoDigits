@@ -82,7 +82,7 @@ int LevelMenuPollEvents(struct LevelMenu* pMenu)
                   pMenu->m_bCancel = 1;
                   return 0;
                   break;
-
+               case SDLK_4:
                case SDLK_LEFT:
                   if (pMenu->m_nCurrentLevel > 1) {
                      pMenu->m_nCurrentLevel--;
@@ -90,12 +90,14 @@ int LevelMenuPollEvents(struct LevelMenu* pMenu)
                   }
                   break;
 
+                case SDLK_6:
                case SDLK_RIGHT:
                   if (pMenu->m_nCurrentLevel < 250) {
                      pMenu->m_nCurrentLevel++;
                      SetLastLevel(pMenu->m_pConfig, pMenu->m_nCurrentLevel);
                   }
                   break;
+                case SDLK_8:
                case SDLK_UP:
                   if (pMenu->m_nCurrentLevel >= 4) {
                      pMenu->m_nCurrentLevel -= 3;
@@ -103,6 +105,7 @@ int LevelMenuPollEvents(struct LevelMenu* pMenu)
                   }
                   break;
 
+                case SDLK_2:
                case SDLK_DOWN:
                   if (pMenu->m_nCurrentLevel <= (250 - 3)) {
                      pMenu->m_nCurrentLevel += 3;
@@ -110,6 +113,7 @@ int LevelMenuPollEvents(struct LevelMenu* pMenu)
                   }
                   break;
 
+                case SDLK_5:
                case SDLK_SPACE:
                case SDLK_RETURN:
                case SDLK_LCTRL:
@@ -132,19 +136,36 @@ void DrawLevelPiece(int x, int y, int nLevelNumber, int bSelected, Font* pFont, 
 
    int radius = SDL_min(w/2, h/2);
 
-   int r = 127, g = 127, b = 127;
+   int r = 127, g = 127, b = 127, a = 255;
 
    if( bSelected == 1 )
    {
       r = 255, g = 0, b = 0;
    }
 
-   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
+   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, a);
 
-   radius = radius - radius/5;
+   int nPortionRim = 5;
+#ifdef _TINSPIRE
+   if( !has_colors )
+   {
+      if( bSelected == 1)
+          nPortionRim = 9;
+   }
+#endif
+   radius = radius - radius/nPortionRim;
 
-   r = 30, g = 144, b = 255;
-   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, 255);
+#ifdef _TINSPIRE
+    if( has_colors ) {
+#endif
+        r = 30, g = 144, b = 255;
+#ifdef _TINSPIRE
+    } else
+    {
+        r = 255, g = 255, b = 255, a = 255;
+    }
+#endif
+   filledEllipseRGBA(pScreen, (Sint16)x, (Sint16)y, (Sint16)radius, (Sint16)radius, (Uint8)r, (Uint8)g, (Uint8)b, a);
 
    static char buffer[5];
 
