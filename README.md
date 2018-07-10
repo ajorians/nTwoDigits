@@ -17,7 +17,7 @@ Press the Enter key on a cell to toggle it from in the left group, in the right 
 Use the - and + keys to undo and redo your moves.
 
 Extra levels:
-This program works with external level files!  There is only a sample level included.  Extra level files which can be placed in any folder on the calculator.  A subfolder is a great place to put them.  When you first ran nTwoDigits-sdl.png.tns it registered the extension 'twodigits' and so because the levels have the extension 'twodigits' at the end it is associated with the nTwoDigits-sdl program.  Let me know if you'd be interested in a level editor or additional levels!  The make-up of a level is rather simple; and so if you take a look at the source and/or the level file you'll probably be able to figure it out.
+This program works with external level files!  There is only a sample level included.  Extra level files which can be placed in any folder on the calculator.  A subfolder is a great place to put them.  When you first ran nTwoDigits-sdl.png.tns it registered the extension 'two' and so because the levels have the extension 'two' at the end it is associated with the nTwoDigits-sdl program.  Let me know if you'd be interested in a level editor or additional levels!  The make-up of a level is rather simple; and so if you take a look at the source and/or the level file you'll probably be able to figure it out.
 
 Source:
 I included my source.  I programmed with C.  It uses nSDL as well as the ndless Software Development Kit.
