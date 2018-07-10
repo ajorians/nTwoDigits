@@ -26,10 +26,12 @@ void FreeStarDrawer(struct StarDrawer** ppDrawer)
 
 void DrawStar(struct StarDrawer* pDrawer, SDL_Surface* pScreen, int x, int y)
 {
+#ifdef _TINSPIRE
    SDL_Rect rectStar;
    rectStar.x = x;
    rectStar.y = y;
    rectStar.w = 16;
    rectStar.h = 16;
    SDL_BlitSurface(pDrawer->m_pStar, NULL, pScreen, &rectStar);
+#endif
 }

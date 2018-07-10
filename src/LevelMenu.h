@@ -19,7 +19,8 @@ struct LevelMenu
    struct StarDrawer* m_pStarDrawer;
    struct Config* m_pConfig;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
-   struct SDL_Surface* m_pTitle;
+   struct SDL_Surface* m_pSelect;
+   struct SDL_Surface* m_pLevel;
    struct SDL_Surface* m_pLevelSurface;
    int m_nScrollY;
    int m_nSrcScrollY;

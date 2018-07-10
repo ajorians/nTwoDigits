@@ -18,6 +18,63 @@ const int g_LevelPieceHeight = 40;
 
 const int g_arrLevelSections[] = {3, 6, 6, 30, 3, 12, 30, 45, 45, 60, 9, 1};//Number of levels in group
 
+Uint16 get_pixel16( SDL_Surface *surface, int x, int y )
+{
+   int bpp = surface->format->BytesPerPixel;
+   Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp; //Get the requested pixel
+   return *(Uint16 *)p;
+}
+
+void put_pixel16( SDL_Surface *surface, int x, int y, Uint16 pixel )
+{
+   int bpp = surface->format->BytesPerPixel;
+   Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+   *(Uint16 *)p = pixel;
+}
+
+void RotateSurface(SDL_Surface* pSurface, SDL_Surface* pSurfaceFlipped)
+{
+   //If the surface must be locked
+   if( SDL_MUSTLOCK( pSurface ) )
+   {
+      //Lock the surface
+      SDL_LockSurface( pSurface );
+   }
+   if( SDL_MUSTLOCK( pSurfaceFlipped ) )
+   {
+      //Lock the surface
+      SDL_LockSurface( pSurfaceFlipped );
+   }
+
+   //Go through columns
+   for( int x = 0; x < pSurface->w; x++ )
+   {
+      //Go through rows
+      for( int y = 0; y < pSurface->h; y++ )
+      {
+         //Get pixel
+         Uint16 pixel = get_pixel16( pSurface, x, y );
+         int nDestX = pSurface->h - y - 1;
+         if( nDestX < 0)
+         {
+            int a = 0;
+            a++;
+         }
+         put_pixel16( pSurfaceFlipped, nDestX, x, pixel );
+      }
+   }
+
+   //Unlock surface
+   if( SDL_MUSTLOCK( pSurface ) )
+   {
+      SDL_UnlockSurface( pSurface );
+   }
+   if( SDL_MUSTLOCK( pSurfaceFlipped ) )
+   {
+      SDL_UnlockSurface( pSurfaceFlipped );
+   }
+}
+
 void CreateLevelMenu(struct LevelMenu** ppMenu, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
    *ppMenu = malloc(sizeof(struct LevelMenu));
@@ -46,6 +103,24 @@ void CreateLevelMenu(struct LevelMenu** ppMenu, int nLevelNum, struct Config* pC
 
    pMenu->m_pFont = LoadFont("arial.ttf", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 24);
 
+   {
+      pMenu->m_pSelect = SDL_CreateRGBSurface(0, 30, 70, SCREEN_BIT_DEPTH, 0, 0, 0, 0);
+      struct SDL_Surface *pTempSurface = SDL_CreateRGBSurface(0, pMenu->m_pSelect->h, pMenu->m_pSelect->w, SCREEN_BIT_DEPTH, 0, 0, 0, 0);
+      SDL_FillRect(pTempSurface, NULL, SDL_MapRGB(pTempSurface->format, 255, 215, 139));
+      DrawText(pTempSurface, pMenu->m_pFont, 0, 0, "Select", 255, 0, 0);
+      RotateSurface(pTempSurface, pMenu->m_pSelect);
+      SDL_FreeSurface(pTempSurface);
+   }
+
+   {
+      pMenu->m_pLevel = SDL_CreateRGBSurface(0, 30, 70, SCREEN_BIT_DEPTH, 0, 0, 0, 0);
+      struct SDL_Surface *pTempSurface = SDL_CreateRGBSurface(0, pMenu->m_pLevel->h, pMenu->m_pLevel->w, SCREEN_BIT_DEPTH, 0, 0, 0, 0);
+      SDL_FillRect(pTempSurface, NULL, SDL_MapRGB(pTempSurface->format, 255, 215, 139));
+      DrawText(pTempSurface, pMenu->m_pFont, 0, 0, "Level", 255, 0, 0);
+      RotateSurface(pTempSurface, pMenu->m_pLevel);
+      SDL_FreeSurface(pTempSurface);
+   }
+
    CreateStarDrawer( &pMenu->m_pStarDrawer );
 }
 
@@ -62,6 +137,11 @@ void FreeLevelMenu(struct LevelMenu** ppMenu)
 
    SDL_FreeSurface(pMenu->m_pLevelSurface);
    pMenu->m_pLevelSurface = NULL;
+
+   SDL_FreeSurface(pMenu->m_pSelect);
+   pMenu->m_pSelect = NULL;
+   SDL_FreeSurface(pMenu->m_pLevel);
+   pMenu->m_pLevel = NULL;
 
    free(*ppMenu);
    *ppMenu = NULL;
@@ -348,6 +428,20 @@ void LevelMenuUpdateDisplay(struct LevelMenu* pMenu)
             pMenu->m_nScrollY=pMenu->m_pLevelSurface->h - nDestinationHeight;
       }
    }
+
+   SDL_Rect selectDst;
+   selectDst.w = pMenu->m_pSelect->w;
+   selectDst.h = pMenu->m_pSelect->h;
+   selectDst.x = 15;
+   selectDst.y = (SCREEN_HEIGHT - selectDst.h)/2 + 10;
+   SDL_BlitSurface(pMenu->m_pSelect, NULL, pMenu->m_pScreen, &selectDst);
+
+   SDL_Rect levelDst;
+   levelDst.w = pMenu->m_pLevel->w;
+   levelDst.h = pMenu->m_pLevel->h;
+   levelDst.x = SCREEN_WIDTH - levelDst.w-45;
+   levelDst.y = (SCREEN_HEIGHT - levelDst.h)/2 + 10;
+   SDL_BlitSurface(pMenu->m_pLevel, NULL, pMenu->m_pScreen, &levelDst);
 
    SDL_UpdateRect(pMenu->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
