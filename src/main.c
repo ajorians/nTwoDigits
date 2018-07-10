@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
                   break;
 
                //Advance to next level if we can
-               if (nLevelNumber < 249) {
+               if (nLevelNumber < 249 && nLevelNumber != -1) {
                   nLevelNumber++;
                   LevelLoad(strLevelData, nLevelNumber);
                } else {
@@ -186,12 +186,16 @@ int main(int argc, char *argv[])
                }
             }
 
+
+             if (nLevelNumber == -1)
+                 bShouldQuit=1;
             if (bShouldQuit)
-               break;
-            if (nLevelNumber == -1)
                break;
          }
       }
+
+      if( argc == 2 )
+          break;
    }
 
    FreeConfig(&pConfig);
