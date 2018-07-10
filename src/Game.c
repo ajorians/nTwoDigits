@@ -132,6 +132,19 @@ void DrawBoard(struct Game* pGame)
       rectYouWin.h = pGame->m_pYouWinGraphic->h;
       SDL_BlitSurface(pGame->m_pYouWinGraphic, NULL, pGame->m_pScreen, &rectYouWin);
    }
+
+   if( pGame->m_nLevelNum > 0) {
+       char message[10];
+       strcpy(message, "Level ");
+       IntToA(buffer, sizeof(buffer), pGame->m_nLevelNum);
+       strcat(message, buffer);
+       int nMessageX = SCREEN_WIDTH / 2 - 22;
+       if( pGame->m_nLevelNum >= 10)
+          nMessageX -= 5;
+      if( pGame->m_nLevelNum >= 100)
+         nMessageX -= 5;
+       DrawText(pGame->m_pScreen, pGame->m_pFont, nMessageX, SCREEN_HEIGHT - 10, message, 0, 0, 0);
+   }
    
    SDL_UpdateRect(pGame->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
